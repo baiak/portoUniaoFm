@@ -15,6 +15,8 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\FileUpload;
 
 class RadioSettingResource extends Resource
 {
@@ -29,8 +31,18 @@ class RadioSettingResource extends Resource
                 TextInput::make('nome')
                     ->required(),
                 TextInput::make('slogan'),
-                TextInput::make('logo_path'),
-                TextInput::make('streaming_url'),
+                FileUpload::make('logo_path')
+                        ->label('Logo da Rádio')
+                        ->image() // Garante que apenas imagens sejam aceitas
+                        ->directory('radio-brand') // Salva em storage/app/public/radio-brand
+                        ->imageEditor() // Permite cortar/ajustar a logo após o upload
+                        ->circleCropper() // Opcional: força um corte circular se preferir
+                        ->maxSize(1024) // Limite de 1MB para não pesar o servidor
+                        ->required(),
+                TextInput::make('streaming_url')
+                ->label('URL do Streaming')
+                        ->url() // Valida se o formato da URL está correto
+                        ->placeholder('https://seu-servidor.com:8000/stream'),
             ]);
     }
 
