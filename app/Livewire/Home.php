@@ -3,11 +3,13 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\Banner;
 
 class Home extends Component
 {
     public function render()
-    {
-        return view('livewire.home');
+    { 
+        $banners = Banner::visiveis()->get();
+        return view('livewire.home', compact('banners'));
     }
 }
