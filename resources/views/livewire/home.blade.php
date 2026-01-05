@@ -24,13 +24,17 @@
                     x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="transition ease-in duration-300"
                     class="absolute inset-0">
-
+                    @if($banner->link_url)
+                    <a href="{{$banner->link_url}}">
+                        <img src="{{ $banner->url }}" alt="{{ $banner->titulo }}" class="w-full h-full object-cover">
+                    </a>
+                    @else
                     <img src="{{ $banner->url }}" alt="{{ $banner->titulo }}" class="w-full h-full object-cover">
-
+                    @endif                    
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-5 sm:p-10 md:p-16">
                         <div class="max-w-4xl">
                             @if($banner->titulo)
-                            
+
                             @if($banner->link_url)
                             <h2 class="text-white text-xl sm:text-3xl md:text-5xl font-bold leading-tight mb-2 md:mb-4">
                                 <a href="{{ $banner->link_url }}">{{ $banner->titulo }}</a>
