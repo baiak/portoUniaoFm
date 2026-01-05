@@ -1,12 +1,11 @@
 <div>
-    {{-- Este é o conteúdo que aparecerá dentro do $slot --}}
     @if($settings)
     <h1 class="text-3xl font-bold">{{ $settings->nome }}</h1>
     <p>{{ $settings->slogan }}</p>
     @endif
 
     <!-- CARROSSEL DE BANNERS -->
-    <div class="mt-10">
+    <section class="mt-10">
         <div x-data="{ 
             activeSlide: 0, 
             slides: {{ $banners->count() }},
@@ -97,6 +96,39 @@
                 </template>
             </div>
         </div>
-    </div>
+    </section>
     <!-- CARROSSEL DE BANNERS -->
+
+    <!-- ANUNCIANTES -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Nossos Parceiros</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+                @foreach($anunciantes as $anunciante)
+                <div class="group relative overflow-hidden rounded-lg aspect-square flex items-center justify-center">
+                    <img src="{{ $anunciante->url }}"
+                        alt="{{ $anunciante->nome }}"
+                        class="w-full h-full object-contain p-4 grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-125">
+
+                    <a href="{{ $anunciante->link_url ?? '#' }}"
+                        target="_blank"
+                        class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 text-center">
+
+                        <h3 class="text-white font-bold text-lg md:text-xl mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            {{ $anunciante->nome }}
+                        </h3>
+                        @if($anunciante->descricao)
+                        <div class="text-gray-200 text-xs md:text-sm line-clamp-3 prose prose-invert prose-sm translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
+                            {!! $anunciante->descricao !!}
+                        </div>
+                        @endif
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    <!-- ANUNCIANTES -->
 </div>

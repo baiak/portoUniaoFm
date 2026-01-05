@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -26,5 +27,8 @@ class Anunciante extends Model implements Sortable
     {
         return $this->logo ? Storage::disk('public')->url($this->logo) : asset('images/placeholder-logo.jpg');
     }
+    public function scopeVisiveis($query)
+    {
+        return $query->where('ativo', true)->ordered();
+    }
 }
-    

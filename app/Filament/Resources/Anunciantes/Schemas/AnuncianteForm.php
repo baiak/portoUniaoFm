@@ -23,6 +23,12 @@ class AnuncianteForm
                         TextInput::make('link_url')->url()->label('Link do Site'),
                         FileUpload::make('logo')
                             ->image()
+                            ->imageEditor() // Ativa o editor de imagens (Crop, Rotate, etc)
+                            ->imageEditorAspectRatios([
+                                '1:1', // Força ou sugere um quadrado (ideal para logos)
+                                '16:9',
+                                null, // Permite recorte livre
+                            ])
                             ->directory('anunciantes')
                             ->disk('public')
                             ->required(),
