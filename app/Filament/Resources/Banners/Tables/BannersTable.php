@@ -26,7 +26,7 @@ class BannersTable
                     ->searchable(),
                 TextColumn::make('link_url')
                     ->searchable(),
-                ToggleColumn::make('ativo')
+                ToggleColumn::make('esta_ativo')
                     ->label('Status')
                     ->onIcon('heroicon-m-check')
                     ->offIcon('heroicon-m-x-mark')
