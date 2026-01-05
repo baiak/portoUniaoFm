@@ -5,23 +5,31 @@ namespace App\Filament\Resources\Banners\Schemas;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\FileUpload;   
 
 class BannerForm
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextInput::make('titulo'),
-                TextInput::make('imagem_path')
-                    ->required(),
-                TextInput::make('link_url'),
-                Toggle::make('esta_ativo')
-                    ->required(),
-                TextInput::make('ordem')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-            ]);
+return $schema->schema([
+            Section::make('Visual do Banner')
+                ->schema([
+                    FileUpload::make('imagem_path')
+                        ->label('Imagem do Banner')
+                        ->image()
+                        ->directory('banners')
+                        ->imageEditor() // O editor que você queria!
+                        ->imageCropAspectRatio('16:9')
+                        ->required(),
+                    
+                    TextInput::make('titulo')
+                        ->label('Título'),
+                        
+                    TextInput::make('link_url')
+                        ->label('URL')
+                        ->url(),
+                ])
+        ]);
     }
 }
