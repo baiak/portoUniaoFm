@@ -8,6 +8,8 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\ToggleColumn;
 
 class BannersTable
 {
@@ -15,14 +17,21 @@ class BannersTable
     {
         return $table
             ->columns([
+                ImageColumn::make('imagem_path')
+                     ->label('Banner')
+                     ->square()
+                     ->width(100)
+                     ->disk('public'),
                 TextColumn::make('titulo')
-                    ->searchable(),
-                TextColumn::make('imagem_path')
                     ->searchable(),
                 TextColumn::make('link_url')
                     ->searchable(),
-                IconColumn::make('esta_ativo')
-                    ->boolean(),
+                ToggleColumn::make('ativo')
+                    ->label('Status')
+                    ->onIcon('heroicon-m-check')
+                    ->offIcon('heroicon-m-x-mark')
+                    ->onColor('success')
+                    ->offColor('danger'),
                 TextColumn::make('ordem')
                     ->numeric()
                     ->sortable(),
@@ -35,6 +44,8 @@ class BannersTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->reorderable('ordem')
+            ->defaultSort('ordem', 'asc')
             ->filters([
                 //
             ])
