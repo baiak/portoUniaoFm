@@ -23,4 +23,7 @@ class Banner extends Model implements Sortable
         'order_column_name' => 'ordem',
         'sort_when_creating' => true,
     ];
+    protected $casts = [
+    'esta_ativo' => 'boolean',
+];
 }

@@ -10,6 +10,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
 
 class BannersTable
 {
@@ -47,7 +48,11 @@ class BannersTable
             ->reorderable('ordem')
             ->defaultSort('ordem', 'asc')
             ->filters([
-                //
+                TernaryFilter::make('esta_ativo')
+                  ->label('Status de Exibição')
+                  ->placeholder('Todos')
+                  ->trueLabel('Apenas Ativos')
+                  ->falseLabel('Apenas Inativos')
             ])
             ->recordActions([
                 EditAction::make(),
