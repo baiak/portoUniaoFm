@@ -13,7 +13,7 @@ class BannerForm
 {
     public static function configure(Schema $schema): Schema
     {
-return $schema->schema([
+        return $schema->schema([
             Section::make('Visual do Banner')
                 ->schema([
                     FileUpload::make('imagem_path')
@@ -23,7 +23,7 @@ return $schema->schema([
                         ->imageEditor()
                         ->visibility('public')
                         ->required(),
-                    
+
                     TextInput::make('titulo')
                         ->label('Título'),
                     RichEditor::make('descricao')
@@ -32,10 +32,10 @@ return $schema->schema([
                             'bold',
                             'italic',
                             'link',
-                            'bulletList', // Opcional: lista com pontinhos
+                            'bulletList',
                             'redo',
                             'undo',
-                        ]),                      
+                        ]),
                     TextInput::make('link_url')
                         ->label('URL')
                         ->url(),
