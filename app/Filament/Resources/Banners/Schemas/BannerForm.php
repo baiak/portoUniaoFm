@@ -19,8 +19,9 @@ return $schema->schema([
                         ->label('Imagem do Banner')
                         ->image()
                         ->directory('banners')
-                        ->imageEditor() // O editor que você queria!
+                        ->imageEditor()
                         ->imageCropAspectRatio('16:9')
+                        ->visibility('public')
                         ->required(),
                     
                     TextInput::make('titulo')
