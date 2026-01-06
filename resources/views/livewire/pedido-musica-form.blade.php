@@ -2,53 +2,64 @@
     <div class="bg-gray-800 p-6 rounded-xl shadow-xl text-white">
         <form wire:submit.prevent="save" x-data="songSearch()">
             @if (session()->has('success'))
-            <div class="bg-green-500 p-3 rounded mb-4">{{ session('success') }}</div>
+                <div class="bg-green-500 p-3 rounded mb-4">{{ session('success') }}</div>
             @endif
             @if (session()->has('error'))
-            <div class="bg-red-500 p-3 rounded mb-4">{{ session('error') }}</div>
+                <div class="bg-red-500 p-3 rounded mb-4">{{ session('error') }}</div>
             @endif
 
-            <input type="text" wire:model="nome" placeholder="Seu Nome" class="w-full mb-3 p-2 bg-gray-700 rounded border-none">
+            <input type="text" wire:model="nome" placeholder="Seu Nome" 
+                   {{ auth('ouvinte')->check() ? 'readonly' : '' }}
+                   class="w-full mb-3 p-2 bg-gray-700 rounded border-none {{ auth('ouvinte')->check() ? 'opacity-70 cursor-not-allowed' : '' }}">
 
-            <input type="text" wire:model="telefone" placeholder="WhatsApp (Opcional)" class="w-full mb-3 p-2 bg-gray-700 rounded border-none">
+            <input type="text" wire:model="telefone" placeholder="WhatsApp (Opcional)" 
+                   {{ auth('ouvinte')->check() ? 'readonly' : '' }}
+                   class="w-full mb-3 p-2 bg-gray-700 rounded border-none {{ auth('ouvinte')->check() ? 'opacity-70 cursor-not-allowed' : '' }}">
 
             <div class="relative mb-3">
                 <input type="text"
                     x-model="query"
                     @input.debounce.500ms="searchSongs()"
                     placeholder="Qual música quer ouvir?"
-                    class="w-full p-2 bg-gray-700 rounded border-none">
+                    class="w-full p-2 bg-gray-700 rounded border-none focus:ring-2 focus:ring-indigo-500">
 
                 <input type="hidden" wire:model="musica" x-model="selectedSong">
 
-                <ul x-show="results.length > 0" class="absolute z-50 w-full bg-gray-600 rounded mt-1 shadow-lg">
+                <ul x-show="results.length > 0" class="absolute z-50 w-full bg-gray-600 rounded mt-1 shadow-lg max-h-60 overflow-y-auto">
                     <template x-for="song in results">
-                        <li @click="select(song)" class="p-2 hover:bg-gray-500 cursor-pointer border-b border-gray-500 last:border-0">
-                            <span x-text="song.trackName"></span> - <small x-text="song.artistName"></small>
+                        <li @click="select(song)" class="p-2 hover:bg-gray-500 cursor-pointer border-b border-gray-500 last:border-0 text-sm">
+                            <span x-text="song.trackName" class="font-bold"></span> - <span x-text="song.artistName"></span>
                         </li>
                     </template>
                 </ul>
             </div>
 
-            <textarea wire:model="mensagem" placeholder="Seu recado" class="w-full mb-3 p-2 bg-gray-700 rounded border-none"></textarea>
+            <textarea wire:model="mensagem" placeholder="Seu recado (mande um alô!)" class="w-full mb-3 p-2 bg-gray-700 rounded border-none"></textarea>
 
             @if(auth('ouvinte')->check())
-            <p>Olá, {{ auth('ouvinte')->user()->name }}!</p>
-            <button type="submit">Enviar Pedido</button>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded transition">
+                    🚀 Enviar Pedido
+                </button>
             @else
-            <button type="button" @click="showLoginModal = true">Enviar Pedido</button>
+                <button type="button" @click="$dispatch('abrir-login')" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 rounded transition">
+                    Faça Login para Pedir
+                </button>
             @endif
         </form>
     </div>
 </div>
+
 <script>
     function songSearch() {
         return {
-            query: '',
+            query: @entangle('musica').live, // Sincroniza o query com a música inicial se houver
             selectedSong: @entangle('musica'),
             results: [],
             searchSongs() {
-                if (this.query.length < 3) return;
+                if (this.query.length < 3) {
+                    this.results = [];
+                    return;
+                }
                 fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(this.query)}&entity=song&limit=5`)
                     .then(r => r.json())
                     .then(d => this.results = d.results);

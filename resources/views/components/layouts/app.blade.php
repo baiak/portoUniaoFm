@@ -15,6 +15,7 @@
             <a href="/" wire:navigate class="text-xl font-bold text-blue-600 uppercase">
                 Painel do Ouvinte
             </a>
+            <livewire:header-ouvinte />
         </div>
     </nav>
 
