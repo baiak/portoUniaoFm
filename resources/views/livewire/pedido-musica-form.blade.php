@@ -32,9 +32,12 @@
 
             <textarea wire:model="mensagem" placeholder="Seu recado" class="w-full mb-3 p-2 bg-gray-700 rounded border-none"></textarea>
 
-            <button type="submit" class="w-full bg-blue-600 p-3 rounded font-bold hover:bg-blue-700 transition">
-                ENVIAR PEDIDO
-            </button>
+            @if(auth('ouvinte')->check())
+            <p>Olá, {{ auth('ouvinte')->user()->name }}!</p>
+            <button type="submit">Enviar Pedido</button>
+            @else
+            <button type="button" @click="showLoginModal = true">Enviar Pedido</button>
+            @endif
         </form>
     </div>
 </div>

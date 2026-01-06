@@ -36,6 +36,10 @@ return [
     */
 
     'guards' => [
+        'ouvinte' => [
+            'driver' => 'session',
+            'provider' => 'ouvintes',
+        ],
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -63,6 +67,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+        'ouvintes' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Ouvinte::class,
         ],
 
         // 'users' => [
