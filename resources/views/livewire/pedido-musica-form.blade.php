@@ -1,0 +1,60 @@
+<div>
+    <div class="bg-gray-800 p-6 rounded-xl shadow-xl text-white">
+        <form wire:submit.prevent="save" x-data="songSearch()">
+            @if (session()->has('success'))
+            <div class="bg-green-500 p-3 rounded mb-4">{{ session('success') }}</div>
+            @endif
+            @if (session()->has('error'))
+            <div class="bg-red-500 p-3 rounded mb-4">{{ session('error') }}</div>
+            @endif
+
+            <input type="text" wire:model="nome" placeholder="Seu Nome" class="w-full mb-3 p-2 bg-gray-700 rounded border-none">
+
+            <input type="text" wire:model="telefone" placeholder="WhatsApp (Opcional)" class="w-full mb-3 p-2 bg-gray-700 rounded border-none">
+
+            <div class="relative mb-3">
+                <input type="text"
+                    x-model="query"
+                    @input.debounce.500ms="searchSongs()"
+                    placeholder="Qual música quer ouvir?"
+                    class="w-full p-2 bg-gray-700 rounded border-none">
+
+                <input type="hidden" wire:model="musica" x-model="selectedSong">
+
+                <ul x-show="results.length > 0" class="absolute z-50 w-full bg-gray-600 rounded mt-1 shadow-lg">
+                    <template x-for="song in results">
+                        <li @click="select(song)" class="p-2 hover:bg-gray-500 cursor-pointer border-b border-gray-500 last:border-0">
+                            <span x-text="song.trackName"></span> - <small x-text="song.artistName"></small>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+
+            <textarea wire:model="mensagem" placeholder="Seu recado" class="w-full mb-3 p-2 bg-gray-700 rounded border-none"></textarea>
+
+            <button type="submit" class="w-full bg-blue-600 p-3 rounded font-bold hover:bg-blue-700 transition">
+                ENVIAR PEDIDO
+            </button>
+        </form>
+    </div>
+</div>
+<script>
+    function songSearch() {
+        return {
+            query: '',
+            selectedSong: @entangle('musica'),
+            results: [],
+            searchSongs() {
+                if (this.query.length < 3) return;
+                fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(this.query)}&entity=song&limit=5`)
+                    .then(r => r.json())
+                    .then(d => this.results = d.results);
+            },
+            select(song) {
+                this.selectedSong = `${song.trackName} - ${song.artistName}`;
+                this.query = this.selectedSong;
+                this.results = [];
+            }
+        }
+    }
+</script>

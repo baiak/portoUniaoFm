@@ -100,35 +100,8 @@
     <!-- CARROSSEL DE BANNERS -->
 
     <!-- PEDIDOS DE MÚSICAS -->
-    <section x-data="{ 
-    search: '', 
-    results: [],
-    fetchSongs() {
-        if (this.search.length < 3) return;
-        fetch(`https://itunes.apple.com/search?term=${this.search}&entity=song&limit=5`)
-            .then(res => res.json())
-            .then(data => this.results = data.results);
-    }
-}">
-        <label>Qual música você quer ouvir?</label>
-        <input type="text"
-            x-model="search"
-            @input.debounce.500ms="fetchSongs()"
-            name="musica"
-            class="w-full rounded-lg border-gray-300"
-            placeholder="Digite o nome da música ou artista...">
-
-        <ul x-show="results.length > 0" class="bg-white border rounded-lg mt-1 shadow-lg">
-            <template x-for="song in results">
-                <li @click="search = song.trackName + ' - ' + song.artistName; results = []"
-                    class="p-2 hover:bg-gray-100 cursor-pointer text-sm">
-                    <span x-text="song.trackName"></span> - <span x-text="song.artistName" class="text-gray-500"></span>
-                </li>
-            </template>
-        </ul>
-    </section>
+    <livewire:pedido-musica-form />
     <!-- PEDIDOS DE MÚSICAS -->
-    <section class="py-16 bg-gray-100
 
     <!-- ANUNCIANTES -->
     <section class=" py-16 bg-white">
