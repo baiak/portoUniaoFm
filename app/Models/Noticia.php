@@ -18,4 +18,8 @@ class Noticia extends Model
         parent::boot();
         static::creating(fn ($noticia) => $noticia->slug = Str::slug($noticia->titulo));
     }
+    protected $casts = [
+        'publicado_em' => 'datetime',
+        'is_published' => 'boolean',
+    ];
 }

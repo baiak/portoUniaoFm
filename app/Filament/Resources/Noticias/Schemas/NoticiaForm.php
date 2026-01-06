@@ -24,6 +24,7 @@ public static function configure(Schema $schema): Schema
                 FileUpload::make('imagem')
                     ->label('Thumbnail/Capa')
                     ->image()
+                    ->disk('public')
                     ->directory('noticias'),
 
                 RichEditor::make('conteudo')

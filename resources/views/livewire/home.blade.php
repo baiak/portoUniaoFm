@@ -102,6 +102,9 @@
     <!-- PEDIDOS DE MÚSICAS -->
     <livewire:pedido-musica-form />
     <!-- PEDIDOS DE MÚSICAS -->
+    <!-- NOTÍCIAS -->
+    <livewire:home-noticias />
+    <!-- NOTÍCIAS -->
 
     <!-- ANUNCIANTES -->
     <section class=" py-16 bg-white">
