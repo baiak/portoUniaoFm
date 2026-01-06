@@ -26,8 +26,8 @@
                         class="w-full p-2 bg-gray-500 rounded border-none focus:ring-2 focus:ring-indigo-200">
                 </div>
 
-                <textarea wire:model="mensagem" placeholder="Seu recado (mande um alô!)" 
-                          class="w-full mb-3 p-2 bg-gray-500 rounded border-none focus:ring-2 focus:ring-indigo-200 h-24"></textarea>
+                <!--<textarea wire:model="mensagem" placeholder="Seu recado (mande um alô!)" 
+                          class="w-full mb-3 p-2 bg-gray-500 rounded border-none focus:ring-2 focus:ring-indigo-200 h-24"></textarea> !-->
 
                 @if(auth('ouvinte')->check())
                     <button type="submit" class="w-full bg-gray-600 hover:bg-indigo-600 text-white font-bold py-3 rounded-lg transition shadow-lg">
