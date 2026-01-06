@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Ouvinte;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use App\Livewire\ListaTodasNoticias;
+use App\Livewire\ExibirNoticia; 
 
 Route::get('/', Home::class)->name('home');
 // Permite apenas 2 pedidos a cada 10 minutos por usuário logado
@@ -27,3 +29,8 @@ Route::get('/auth/google/callback', function () {
 
     return redirect('/');
 });
+// Listagem de todas as notícias
+Route::get('/noticias', ListaTodasNoticias::class)->name('noticias.index');
+
+// Notícia individual (usando o slug)
+Route::get('/noticia/{slug}', ExibirNoticia::class)->name('noticia.show');

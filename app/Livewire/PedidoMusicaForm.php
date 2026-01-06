@@ -13,7 +13,7 @@ class PedidoMusicaForm extends Component
     protected $rules = [
         'nome' => 'required|min:3',
         'musica' => 'required', // Adicionei musica como obrigatório
-        'mensagem' => 'required|min:5',
+       // 'mensagem' => 'required|min:5',
     ];
 
     // Preenche os dados automaticamente ao carregar o componente
@@ -42,7 +42,7 @@ class PedidoMusicaForm extends Component
             'nome' => $this->nome,
             'telefone' => $this->telefone,
             'musica' => $this->musica,
-            'mensagem' => $this->mensagem,
+           // 'mensagem' => $this->mensagem,
         ]);
 
         RateLimiter::hit($key, 120);

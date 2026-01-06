@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="mt-auto">
-                            <a href="/noticia/{{ $noticia->slug }}"
+                            <a href="{{ route('noticia.show', $noticia->slug) }}"
                                 class="inline-flex items-center text-indigo-600 font-bold text-sm hover:gap-2 transition-all">
                                 Ler notícia completa
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
