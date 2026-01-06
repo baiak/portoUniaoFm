@@ -1,51 +1,45 @@
 <div>
-    <div class="bg-gray-800 p-6 rounded-xl shadow-xl text-white">
-        <form wire:submit.prevent="save" x-data="songSearch()">
-            @if (session()->has('success'))
-                <div class="bg-green-500 p-3 rounded mb-4">{{ session('success') }}</div>
-            @endif
-            @if (session()->has('error'))
-                <div class="bg-red-500 p-3 rounded mb-4">{{ session('error') }}</div>
-            @endif
+    <div class="max-w-lg mx-auto px-4 py-8"> 
+        <div class="bg-gray-300 p-6 rounded-xl shadow-xl text-white">
+            <form wire:submit.prevent="save"> <h2 class="text-xl font-bold mb-4 text-center text-gray-500">Peça sua Música</h2>
 
-            <input type="text" wire:model="nome" placeholder="Seu Nome" 
-                   {{ auth('ouvinte')->check() ? 'readonly' : '' }}
-                   class="w-full mb-3 p-2 bg-gray-700 rounded border-none {{ auth('ouvinte')->check() ? 'opacity-70 cursor-not-allowed' : '' }}">
+                @if (session()->has('success'))
+                    <div class="bg-green-500 p-3 rounded mb-4 text-sm">{{ session('success') }}</div>
+                @endif
+                
+                @if (session()->has('error'))
+                    <div class="bg-red-500 p-3 rounded mb-4 text-sm">{{ session('error') }}</div>
+                @endif
 
-            <input type="text" wire:model="telefone" placeholder="WhatsApp (Opcional)" 
-                   {{ auth('ouvinte')->check() ? 'readonly' : '' }}
-                   class="w-full mb-3 p-2 bg-gray-700 rounded border-none {{ auth('ouvinte')->check() ? 'opacity-70 cursor-not-allowed' : '' }}">
+                <input type="text" wire:model="nome" placeholder="Seu Nome" 
+                       {{ auth('ouvinte')->check() ? 'readonly' : '' }}
+                       class="w-full mb-3 p-2 bg-gray-500 rounded border-none focus:ring-2 focus:ring-indigo-200 {{ auth('ouvinte')->check() ? 'opacity-70 cursor-not-allowed' : '' }}">
 
-            <div class="relative mb-3">
-                <input type="text"
-                    x-model="query"
-                    @input.debounce.500ms="searchSongs()"
-                    placeholder="Qual música quer ouvir?"
-                    class="w-full p-2 bg-gray-700 rounded border-none focus:ring-2 focus:ring-indigo-500">
+                <input type="text" wire:model="telefone" placeholder="WhatsApp (Opcional)" 
+                       {{ auth('ouvinte')->check() ? 'readonly' : '' }}
+                       class="w-full mb-3 p-2 bg-gray-500 rounded border-none focus:ring-2 focus:ring-indigo-200 {{ auth('ouvinte')->check() ? 'opacity-70 cursor-not-allowed' : '' }}">
 
-                <input type="hidden" wire:model="musica" x-model="selectedSong">
+                <div class="mb-3">
+                    <input type="text"
+                        wire:model="musica"
+                        placeholder="Qual música quer ouvir?"
+                        class="w-full p-2 bg-gray-500 rounded border-none focus:ring-2 focus:ring-indigo-200">
+                </div>
 
-                <ul x-show="results.length > 0" class="absolute z-50 w-full bg-gray-600 rounded mt-1 shadow-lg max-h-60 overflow-y-auto">
-                    <template x-for="song in results">
-                        <li @click="select(song)" class="p-2 hover:bg-gray-500 cursor-pointer border-b border-gray-500 last:border-0 text-sm">
-                            <span x-text="song.trackName" class="font-bold"></span> - <span x-text="song.artistName"></span>
-                        </li>
-                    </template>
-                </ul>
-            </div>
+                <textarea wire:model="mensagem" placeholder="Seu recado (mande um alô!)" 
+                          class="w-full mb-3 p-2 bg-gray-500 rounded border-none focus:ring-2 focus:ring-indigo-200 h-24"></textarea>
 
-            <textarea wire:model="mensagem" placeholder="Seu recado (mande um alô!)" class="w-full mb-3 p-2 bg-gray-700 rounded border-none"></textarea>
-
-            @if(auth('ouvinte')->check())
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded transition">
-                    🚀 Enviar Pedido
-                </button>
-            @else
-                <button type="button" @click="$dispatch('abrir-login')" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 rounded transition">
-                    Faça Login para Pedir
-                </button>
-            @endif
-        </form>
+                @if(auth('ouvinte')->check())
+                    <button type="submit" class="w-full bg-gray-600 hover:bg-indigo-600 text-white font-bold py-3 rounded-lg transition shadow-lg">
+                        🚀 Enviar Pedido
+                    </button>
+                @else
+                    <button type="button" @click="$dispatch('abrir-login')" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 rounded-lg transition border border-gray-500">
+                        Faça Login para Pedir
+                    </button>
+                @endif
+            </form>
+        </div>
     </div>
 </div>
 

@@ -1,61 +1,120 @@
 <?php
+
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Ouvinte;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Livewire\Component;
 
 class HeaderOuvinte extends Component
 {
-    // Campos de Cadastro
-    public $name, $email, $telefone, $password;
-    
-    // Campos de Login
-    public $loginEmail, $loginPassword;
+    /** Cadastro */
+    public string $name = '';
+    public string $email = '';
+    public ?string $telefone = null;
+    public string $password = '';
 
-    public $showModal = false;
-    public $mode = 'login'; // 'login' ou 'register'
+    /** Login */
+    public string $loginEmail = '';
+    public string $loginPassword = '';
 
-    public function register()
+    /** UI */
+    public bool $showModal = false;
+    public string $mode = 'login'; // login | register
+
+    protected function rules(): array
     {
-        $this->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:ouvintes,email',
-            'password' => 'required|min:6',
-        ]);
+        return match ($this->mode) {
+            'register' => [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:ouvintes,email',
+                'password' => 'required|min:6',
+                'telefone' => 'nullable|string|max:20',
+            ],
+            default => [
+                'loginEmail' => 'required|email',
+                'loginPassword' => 'required|string',
+            ],
+        };
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'email.unique' => 'Este e-mail já está cadastrado.',
+            'password.min' => 'A senha deve ter no mínimo 6 caracteres.',
+        ];
+    }
+
+    public function register(): void
+    {
+        $this->mode = 'register';
+        $this->validate();
 
         $ouvinte = Ouvinte::create([
             'name' => $this->name,
             'email' => $this->email,
             'telefone' => $this->telefone,
-            'password' => $this->password,
+            'password' => Hash::make($this->password),
         ]);
 
         Auth::guard('ouvinte')->login($ouvinte);
-        $this->showModal = false;
-        return redirect()->to(request()->header('Referer')); // Atualiza a página
+
+        $this->resetForm();
+        $this->closeModal();
+
+        redirect()->back();
     }
 
-    public function login()
+    public function login(): void
     {
-        $this->validate([
-            'loginEmail' => 'required|email',
-            'loginPassword' => 'required',
-        ]);
+        $this->mode = 'login';
+        $this->validate();
 
-        if (Auth::guard('ouvinte')->attempt(['email' => $this->loginEmail, 'password' => $this->loginPassword])) {
-            $this->showModal = false;
-            return redirect()->to(request()->header('Referer'));
+        if (! Auth::guard('ouvinte')->attempt([
+            'email' => $this->loginEmail,
+            'password' => $this->loginPassword,
+        ])) {
+            $this->addError('loginEmail', 'E-mail ou senha inválidos.');
+            return;
         }
 
-        add_error('loginEmail', 'Credenciais inválidas.');
+        $this->resetForm();
+        $this->closeModal();
+
+        redirect()->back();
     }
 
-    public function logout()
+    public function logout(): void
     {
         Auth::guard('ouvinte')->logout();
-        return redirect()->to(request()->header('Referer'));
+
+        redirect()->back();
+    }
+
+    public function openModal(string $mode = 'login'): void
+    {
+        $this->resetErrorBag();
+        $this->mode = $mode;
+        $this->showModal = true;
+    }
+
+    public function closeModal(): void
+    {
+        $this->showModal = false;
+    }
+
+    private function resetForm(): void
+    {
+        $this->reset([
+            'name',
+            'email',
+            'telefone',
+            'password',
+            'loginEmail',
+            'loginPassword',
+        ]);
     }
 
     public function render()
