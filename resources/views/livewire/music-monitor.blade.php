@@ -62,6 +62,7 @@
                 <div class="flex items-center justify-between p-2 rounded hover:bg-gray-50 transition duration-150 group">
                     <div class="flex items-center gap-3 overflow-hidden mr-2">
                         <div class="flex flex-col overflow-hidden">
+                            
                             <span class="text-gray-700 text-sm font-semibold truncate group-hover:text-blue-600">
                                 {{ $track->title }}
                             </span>
@@ -69,9 +70,6 @@
                                 {{ $track->artist }}
                             </span>
                         </div>
-                    </div>
-                    <div class="text-[10px] font-mono text-gray-400 whitespace-nowrap bg-gray-100 px-1.5 py-0.5 rounded">
-                        {{ $track->played_at->format('H:i') }}
                     </div>
                 </div>
                 @empty
