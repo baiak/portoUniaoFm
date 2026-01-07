@@ -1,9 +1,9 @@
 <div>
-    <div class="max-w-lg mx-auto px-4 py-8">
+    <div class="max-w-lg mx-auto px-4">
         <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
 
             <form wire:submit.prevent="save">
-                <h2 class="text-2xl font-extrabold mb-6 text-center text-gray-800 tracking-tight uppercase">
+                <h2 class="text-xl font-bold text-gray-800 mb-8">
                     Peça sua Música
                 </h2>
 

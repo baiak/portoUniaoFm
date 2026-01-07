@@ -20,7 +20,6 @@
     </nav>
 
     <main class="container mx-auto px-4">
-        {{-- O CONTEÚDO DA HOME SERÁ INJETADO AQUI: --}}
         {{ $slot }}
     </main>
     @livewireScripts

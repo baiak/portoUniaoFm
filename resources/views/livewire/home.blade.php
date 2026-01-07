@@ -99,14 +99,23 @@
     </section>
     <!-- CARROSSEL DE BANNERS -->
 
-    <!-- PEDIDOS DE MÚSICAS -->
-    <livewire:pedido-musica-form />
-    <!-- PEDIDOS DE MÚSICAS -->
-    
-    <!-- MUSIC MONITOR -->
-    <livewire:music-monitor />
-    <!-- MUSIC MONITOR -->
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-12">
 
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+            <!-- PEDIDOS DE MÚSICAS -->
+            <div class="lg:col-span-1">
+                <livewire:pedido-musica-form />
+            </div>
+            <!-- PEDIDOS DE MÚSICAS -->
+
+            <!-- MUSIC MONITOR -->
+            <div class="lg:col-span-1">
+                <livewire:music-monitor />
+            </div>
+            <!-- MUSIC MONITOR -->
+        </div>
+    </div>
     <!-- NOTÍCIAS -->
     <livewire:home-noticias />
     <!-- NOTÍCIAS -->
