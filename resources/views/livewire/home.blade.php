@@ -102,6 +102,11 @@
     <!-- PEDIDOS DE MÚSICAS -->
     <livewire:pedido-musica-form />
     <!-- PEDIDOS DE MÚSICAS -->
+    
+    <!-- MUSIC MONITOR -->
+    <livewire:music-monitor />
+    <!-- MUSIC MONITOR -->
+
     <!-- NOTÍCIAS -->
     <livewire:home-noticias />
     <!-- NOTÍCIAS -->
