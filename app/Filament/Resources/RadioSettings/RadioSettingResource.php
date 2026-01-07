@@ -32,17 +32,17 @@ class RadioSettingResource extends Resource
                     ->required(),
                 TextInput::make('slogan'),
                 FileUpload::make('logo_path')
-                        ->label('Logo da Rádio')
-                        ->image() // Garante que apenas imagens sejam aceitas
-                        ->directory('radio-brand') // Salva em storage/app/public/radio-brand
-                        ->imageEditor() // Permite cortar/ajustar a logo após o upload
-                        ->circleCropper() // Opcional: força um corte circular se preferir
-                        ->maxSize(1024) // Limite de 1MB para não pesar o servidor
-                        ->required(),
+                    ->label('Logo da Rádio')
+                    ->disk('public') // Salva em storage/app/public
+                    ->image() // Garante que apenas imagens sejam aceitas
+                    ->directory('radio-brand') // Salva em storage/app/public/radio-brand
+                    ->imageEditor() // Permite cortar/ajustar a logo após o upload
+                    ->circleCropper() // Opcional: força um corte circular se preferir
+                    ->required(),
                 TextInput::make('streaming_url')
-                ->label('URL do Streaming')
-                        ->url() // Valida se o formato da URL está correto
-                        ->placeholder('https://seu-servidor.com:8000/stream'),
+                    ->label('URL do Streaming')
+                    ->url() // Valida se o formato da URL está correto
+                    ->placeholder('https://seu-servidor.com:8000/stream'),
             ]);
     }
 
