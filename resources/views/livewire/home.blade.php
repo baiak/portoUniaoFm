@@ -1,9 +1,4 @@
 <div>
-    @if($settings)
-    <h1 class="text-3xl font-bold">{{ $settings->nome }}</h1>
-    <p>{{ $settings->slogan }}</p>
-    @endif
-
     <!-- CARROSSEL DE BANNERS -->
     <section class="mt-10">
         <div x-data="{ 

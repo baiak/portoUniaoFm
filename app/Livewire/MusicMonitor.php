@@ -10,7 +10,7 @@ class MusicMonitor extends Component
     public function render()
     {
         // 1. Buscamos mais registros (ex: 30) para ter margem caso haja muitos duplicados
-        $rawTracks = SongHistory::orderBy('played_at', 'desc')->take(6)->get();
+        $rawTracks = SongHistory::where('type', 'song')->orderBy('played_at', 'desc')->take(6)->get();
 
         // 2. Filtramos para manter apenas musicas únicas (baseado no titulo)
         // O unique mantém o primeiro registro encontrado (o mais recente) e descarta os outros

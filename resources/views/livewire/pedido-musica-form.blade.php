@@ -3,8 +3,8 @@
         <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
 
             <form wire:submit.prevent="save">
-                <h2 class="text-xl font-bold text-gray-800 mb-8">
-                    Peça sua Música
+                <h2 class="text-xl font-bold text-gray-800 pb-6 border-b mb-6">
+                    Peça sua música
                 </h2>
 
                 @if (session()->has('success'))
