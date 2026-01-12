@@ -6,7 +6,7 @@
 
         <div wire:ignore>
             <audio x-ref="audio" preload="none">
-                <source src="{{ $settings->streaming_url ?? '' }}" type="audio/mpeg">
+                <source src="{{ $settings->streaming_url ?? 'https://stm4.xcast.com.br:12006/stream' }}" type="audio/mpeg">
             </audio>
         </div>
 

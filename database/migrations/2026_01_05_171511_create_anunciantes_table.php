@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('anunciantes', function (Blueprint $table) {
-            Schema::create('anunciantes', function (Blueprint $table) {
+            
                 $table->id();
                 $table->string('nome');
                 $table->string('logo');
@@ -21,7 +21,7 @@ return new class extends Migration
                 $table->integer('ordem')->default(0);
                 $table->boolean('ativo')->default(true);
                 $table->timestamps();
-            });
+            
         });
     }
 

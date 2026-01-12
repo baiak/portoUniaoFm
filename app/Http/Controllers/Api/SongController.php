@@ -18,6 +18,25 @@ class SongController extends Controller
             'album' => 'nullable|string',
             'cover_url' => 'nullable|string',
         ]);
+        // =========================================================
+        // NOVO: FILTRO DE COMERCIAIS E VINHETAS
+        // =========================================================
+        // Lista de termos que NÃO devem ser salvos no banco
+        $ignoredTerms = [
+            'A Melhor Programação', 
+            'Porto União FM', 
+            'Comercial', 
+            'Locução',
+            'Desconhecido' // Opcional, se quiser ignorar desconhecidos
+        ];
+
+        if (in_array($validated['title'], $ignoredTerms) || in_array($validated['artist'], $ignoredTerms)) {
+            return response()->json([
+                'status' => 'ignored_commercial', 
+                'message' => 'Vinheta ou comercial ignorado.'
+            ], 200);
+        }
+        // =========================================================
 
         // 2. Checagem de Duplicidade
         // Pega a última música gravada no banco
@@ -38,6 +57,14 @@ class SongController extends Controller
             'cover_url' => $validated['cover_url'] ?? null,
             'played_at' => now(),
         ]);
+        // 1. Atualiza ou Cria no Catálogo de Classificação
+        // Isso garante que a música exista para receber votos
+        if (isset($validated['title']) && isset($validated['artist'])) {
+            RatedSong::firstOrCreate(
+                ['artist' => $validated['artist'], 'title' => $validated['title']],
+                ['cover_url' => $validated['cover_url'] ?? null]
+            );
+        }
 
         // 4. Resposta de Sucesso
         // Retornamos JSON com status 201 (Created - Criado com sucesso)
