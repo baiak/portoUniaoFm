@@ -109,6 +109,11 @@
                 <livewire:music-monitor />
             </div>
             <!-- MUSIC MONITOR -->
+
+            <!-- TOP DAS MÚSICAS -->
+            <div class="lg:col-span-1">
+                <livewire:top-songs />
+            </div>
         </div>
     </div>
     <!-- NOTÍCIAS -->
