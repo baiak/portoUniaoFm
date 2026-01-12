@@ -72,8 +72,11 @@ class MusicMonitor extends Component
 
     public function render()
     {
-        // Busca dados normais da rádio
+        // 1. Buscamos mais registros (ex: 30) para ter margem caso haja muitos duplicados
         $rawTracks = SongHistory::where('type', 'song')->orderBy('played_at', 'desc')->take(6)->get();
+
+        // 2. Filtramos para manter apenas musicas únicas (baseado no titulo)
+        // O unique mantém o primeiro registro encontrado (o mais recente) e descarta os outros
         $uniqueTracks = $rawTracks->unique('title');
         $nowPlaying = $uniqueTracks->first();
         $history = $uniqueTracks->skip(1)->take(10);

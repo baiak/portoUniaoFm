@@ -5,18 +5,23 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SongHistory;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class SongController extends Controller
 {
     public function store(Request $request)
     {
-        // 1. Validação: Garante que o Python mandou o que precisa
-        // Se faltar algo, o Laravel já devolve erro automaticamente aqui.
+        \Illuminate\Support\Facades\Log::info('Recebi uma requisição:', $request->all());
+        // ---------------------------------------------------------
+        // 1. Validação
+        // ---------------------------------------------------------
         $validated = $request->validate([
             'artist' => 'required|string',
             'title' => 'required|string',
             'album' => 'nullable|string',
             'cover_url' => 'nullable|string',
+            'type' => 'nullable|string|in:song,station',
         ]);
         // =========================================================
         // NOVO: FILTRO DE COMERCIAIS E VINHETAS
@@ -38,24 +43,64 @@ class SongController extends Controller
         }
         // =========================================================
 
-        // 2. Checagem de Duplicidade
-        // Pega a última música gravada no banco
-        $lastSong = SongHistory::latest()->first();
+        // ---------------------------------------------------------
+        // 2. DEFESA 1: Race Condition (Bloqueio de 10s)
+        // ---------------------------------------------------------
+        // Cria uma chave única baseada no que chegou agora.
+        // Se o Python mandar 2 requests iguais no mesmo segundo, o segundo bate aqui e morre.
+        $songSignature = Str::slug($validated['artist'] . '_' . $validated['title']);
+        $lockKey = 'song_lock_' . $songSignature;
 
-        // Se existir uma última música E ela for igual a que chegou agora...
-        if ($lastSong && $lastSong->title === $validated['title'] && $lastSong->artist === $validated['artist']) {
-            // ... retornamos status 200 (OK) mas não salvamos nada novo.
-            return response()->json(['status' => 'ignored', 'message' => 'Essa música já está tocando'], 200);
+        // Tenta criar o bloqueio. Se já existe (retorna false), aborta.
+        if (!Cache::add($lockKey, true, 10)) {
+            return response()->json([
+                'status' => 'ignored',
+                'message' => 'Race Condition: Requisição duplicada bloqueada.'
+            ], 200);
         }
 
-        // 3. Salvar no Banco
-        // Se passou pela checagem, cria o registro novo.
+        // ---------------------------------------------------------
+        // 3. DEFESA 2: Variação de Nome (Fuzzy Matching)
+        // ---------------------------------------------------------
+        $lastSong = SongHistory::latest()->first();
+
+        if ($lastSong) {
+            // Limpa as strings para comparação (remove feat, remix, pontuação)
+            $cleanOldTitle = $this->normalizeString($lastSong->title);
+            $cleanNewTitle = $this->normalizeString($validated['title']);
+            
+            $cleanOldArtist = $this->normalizeString($lastSong->artist);
+            $cleanNewArtist = $this->normalizeString($validated['artist']);
+
+            // Calcula porcentagem de similaridade
+            similar_text($cleanOldTitle, $cleanNewTitle, $percentTitle);
+            similar_text($cleanOldArtist, $cleanNewArtist, $percentArtist);
+
+            // Regra: Se o artista é > 85% igual E (título > 80% igual OU um contém o outro)
+            if ($percentArtist > 85 && ($percentTitle > 80 || str_contains($cleanNewTitle, $cleanOldTitle) || str_contains($cleanOldTitle, $cleanNewTitle))) {
+                
+                // Bônus: Se a nova versão tem capa e a antiga não, atualiza a antiga!
+                if (empty($lastSong->cover_url) && !empty($validated['cover_url'])) {
+                    $lastSong->update(['cover_url' => $validated['cover_url']]);
+                }
+
+                return response()->json([
+                    'status' => 'ignored', 
+                    'message' => 'Variação da mesma música detectada.'
+                ], 200);
+            }
+        }
+
+        // ---------------------------------------------------------
+        // 4. Inserção (Se passou pelas duas defesas)
+        // ---------------------------------------------------------
         $song = SongHistory::create([
             'artist' => $validated['artist'],
             'title' => $validated['title'],
             'album' => $validated['album'] ?? null,
             'cover_url' => $validated['cover_url'] ?? null,
             'played_at' => now(),
+            'type' => $validated['type'] ?? 'song',
         ]);
         // 1. Atualiza ou Cria no Catálogo de Classificação
         // Isso garante que a música exista para receber votos
@@ -66,12 +111,23 @@ class SongController extends Controller
             );
         }
 
-        // 4. Resposta de Sucesso
-        // Retornamos JSON com status 201 (Created - Criado com sucesso)
         return response()->json([
             'status' => 'success',
             'message' => 'Música atualizada!',
             'data' => $song
         ], 201);
+    }
+
+    /**
+     * Remove sujeira do Shazam para melhorar a comparação
+     */
+    private function normalizeString($string)
+    {
+        $string = strtolower($string);
+        // Lista de termos para ignorar na comparação
+        $remove = [' feat.', ' feat ', ' ft.', ' ft ', ' remix', ' radio edit', ' original mix', ' live', ' version', ' remaster', ' (', ')', '[', ']'];
+        $string = str_replace($remove, '', $string);
+        // Remove tudo que não for letra ou número
+        return preg_replace('/[^a-z0-9]/', '', $string);
     }
 }
