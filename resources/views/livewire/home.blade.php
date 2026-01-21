@@ -95,27 +95,22 @@
     <!-- CARROSSEL DE BANNERS -->
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-12">
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-
-            <!-- PEDIDOS DE MÚSICAS -->
-            <div class="lg:col-span-1">
-                <livewire:pedido-musica-form />
-            </div>
-            <!-- PEDIDOS DE MÚSICAS -->
-
-            <!-- MUSIC MONITOR -->
-            <div class="lg:col-span-1">
-                <livewire:music-monitor />
-            </div>
-            <!-- MUSIC MONITOR -->
-
-            <!-- TOP DAS MÚSICAS -->
-            <div class="lg:col-span-1">
-                <livewire:top-songs />
-            </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-1 h-full">
+            <livewire:pedido-musica-form class="h-full" />
         </div>
+
+        <div class="lg:col-span-1 h-full">
+            <livewire:music-monitor class="h-full" />
+        </div>
+
+        <div class="lg:col-span-1 h-full">
+            <livewire:top-songs class="h-full" />
+        </div>
+        
     </div>
+</div>
     <!-- NOTÍCIAS -->
     <livewire:home-noticias />
     <!-- NOTÍCIAS -->

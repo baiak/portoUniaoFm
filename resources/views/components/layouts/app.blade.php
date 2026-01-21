@@ -12,7 +12,7 @@
         @persist('player')
         <livewire:radio-player />
         @endpersist
-        <livewire:header-ouvinte />
+       <!-- <livewire:header-ouvinte /> !-->
     </div>
     <main class="container mx-auto px-4">
         {{ $slot }}

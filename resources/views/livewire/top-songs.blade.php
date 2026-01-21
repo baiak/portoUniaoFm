@@ -1,5 +1,5 @@
 <div>
-<div wire:poll.10s class="bg-white rounded-xl shadow-lg px-4 py-6 max-w-md mx-auto mt-6">
+<div wire:poll.10s class="bg-white rounded-xl shadow-lg px-4 py-8 max-w-md mx-auto">
     
     <div class="flex items-center justify-between mb-6 border-b pb-2 border-gray-100">
         <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
