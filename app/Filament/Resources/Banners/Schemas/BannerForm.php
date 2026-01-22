@@ -18,12 +18,12 @@ class BannerForm
                 ->schema([
                     FileUpload::make('imagem_path')
                         ->label('Imagem do Banner')
-                        ->image()
+                        ->disk('public')             
                         ->directory('banners')
-                        ->imageEditor()
-                        ->disk('public')
-                        //->optimize()
                         ->visibility('public')
+                        ->image()                     
+                        ->imageEditor()               
+                        ->preserveFilenames()         // evita bug com tmp               // evita crash no editor
                         ->required(),
 
                     TextInput::make('titulo')
