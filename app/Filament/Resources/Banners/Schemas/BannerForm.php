@@ -20,9 +20,9 @@ class BannerForm
                         ->label('Imagem do Banner')
                         ->image()
                         ->directory('banners')
-                        ->imageEditor()
+                        ->imageEditor(2)
                         ->disk('public')
-                        ->optimize()
+                        //->optimize()
                         ->visibility('public')
                         ->required(),
 
