@@ -2,18 +2,17 @@
     @abrir-login.window="showModal = true">
     <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center border-b">
         <div>
-            @if(auth('ouvinte')->check())
-            <div class="flex items-center gap-4">
-                <span class="text-gray-700">Olá, <b>{{ auth('ouvinte')->user()->name }}</b></span>
-                <button wire:click="logout" wire:loading.attr="disabled" class="text-sm text-red-500 hover:underline disabled:opacity-50">
-                    Sair
-                </button>
-            </div>
+           @if(auth('ouvinte')->check())
+              <div class="flex items-center gap-2">
+                  <img src="{{ auth('ouvinte')->user()->avatar }}" class="w-8 h-8 rounded-full">
+                  <span>Olá, {{ auth('ouvinte')->user()->name }}</span>
+                  <a href="{{ route('logout') }}" class="text-red-500 text-sm">Sair</a>
+        </div>
             @else
-               <a href="{{ route('google-auth') }}" class="flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
-                   Login com Google
+               <a href="{{ route('google-auth') }}" class="btn-login">
+                 Entrar com Google
                </a>
-            @endif
+             @endif
         </div>
         <div x-show="showModal"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"

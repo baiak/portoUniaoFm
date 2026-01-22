@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Ouvinte;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
@@ -19,24 +20,42 @@ class GoogleAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
             
-            // Procura o usuário ou cria um novo
-            $user = User::updateOrCreate([
-                'google_id' => $googleUser->id,
-            ], [
-                'name' => $googleUser->name,
-                'email' => $googleUser->email,
-                'avatar' => $googleUser->avatar,
-                'password' => null, // Usuário via Google não tem senha
-                // Se precisar gerar uma senha aleatória para evitar erro:
-                // 'password' => bcrypt(Str::random(16)), 
-            ]);
+            // LÓGICA IMPORTANTE:
+            // Tenta encontrar pelo Google ID OU pelo E-mail para evitar duplicidade
+            // se a pessoa já tiver cadastro manual.
+            
+            $ouvinte = Ouvinte::updateOrCreate(
+                [
+                    'email' => $googleUser->email, // Chave de busca (Email é único)
+                ],
+                [
+                    'google_id' => $googleUser->id,
+                    'name'      => $googleUser->name,
+                    'avatar'    => $googleUser->avatar,
+                    // Como a senha é obrigatória na sua tabela, geramos uma aleatória
+                    // apenas se o usuário estiver sendo criado agora.
+                    // O updateOrCreate não sobrescreve se passarmos uma lógica condicional, 
+                    // mas aqui vamos garantir que se não tiver senha, crie uma.
+                ]
+            );
+
+            // Se for um usuário novo criado pelo Google, ele não tem senha. 
+            // Precisamos preencher para não dar erro no banco (se não for nullable).
+            if (!$ouvinte->password) {
+                $ouvinte->password = bcrypt(Str::random(24));
+                $ouvinte->save();
+            }
         
-            Auth::login($user);
+            // LOGA USANDO O GUARD 'OUVINTE'
+            Auth::guard('ouvinte')->login($ouvinte);
         
-            return redirect()->intended('/dashboard'); // Ou para onde você quiser mandar
+            return redirect()->intended('/'); 
             
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Erro ao logar com Google.');
+            // Log do erro para você ver o que houve (opcional)
+            // \Log::error($e->getMessage());
+            
+            return redirect('/')->with('error', 'Erro ao logar: ' . $e->getMessage());
         }
     }
 }

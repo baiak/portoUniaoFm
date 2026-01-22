@@ -42,3 +42,10 @@ Route::get('/especial/{slug}', ViewSpecial::class)->name('especial.ver');
 Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
 
 Route::get('auth/google/callback', [GoogleAuthController::class, 'callback']);
+
+Route::get('/logout', function () {
+    Auth::guard('ouvinte')->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->name('logout');
