@@ -1,21 +1,6 @@
 <div x-data="{ showModal: @entangle('showModal') }"
     @abrir-login.window="showModal = true">
     <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center border-b">
-       <!-- <div style="display:none;">!-->
-            @if(auth('ouvinte')->check())
-            <!--<div class="flex items-center gap-4">
-                <span class="text-gray-700">Olá, <b>{{ auth('ouvinte')->user()->name }}</b></span>
-                <button wire:click="logout" wire:loading.attr="disabled" class="text-sm text-red-500 hover:underline disabled:opacity-50">
-                    Sair
-                </button>
-            </div>!-->
-            @else
-            <!--<button @click="showModal = true" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
-                Entrar / Cadastrar
-            </button>!-->
-            @endif
-        <!--</div>!-->
-
         <div x-show="showModal"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
             x-transition
