@@ -22,7 +22,7 @@ class BannerForm
                         ->directory('banners')
                         ->imageEditor()
                         ->disk('public')
-                        ->optimize('webp')
+                        
                         ->visibility('public')
                         ->required(),
 
