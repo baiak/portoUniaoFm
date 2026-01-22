@@ -22,8 +22,8 @@ class BannerForm
                         ->directory('banners')
                         ->visibility('public')
                         ->image()                     
-                        ->imageEditor()               
-                        ->preserveFilenames()         // evita bug com tmp               // evita crash no editor
+                        ->imageEditor()
+                        ->optimize('webp', 80)               
                         ->required(),
 
                     TextInput::make('titulo')
