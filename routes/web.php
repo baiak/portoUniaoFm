@@ -14,7 +14,7 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 Route::get('/', Home::class)->name('home');
 // Permite apenas 2 pedidos a cada 10 minutos por usuário logado
 Route::post('/pedir-musica', [PedidoMusica::class, 'store'])
-    ->middleware(['auth', 'throttle:2,10']);
+    ->middleware(['auth:ouvinte', 'throttle:2,10']);
 Route::get('/auth/google/callback', function () {
     $googleUser = Socialite::driver('google')->user();
 

@@ -1,108 +1,68 @@
 <div x-data="{ showModal: @entangle('showModal') }"
     @abrir-login.window="showModal = true">
     
-    {{-- MUDANÇA AQUI: Trocamos 'justify-between' por 'justify-end' --}}
-    <nav class="bg-white shadow-sm py-4 px-6 flex justify-end items-center border-b">
+    {{-- CSS FIX: 'justify-end' joga tudo para a direita --}}
+    <nav class="bg-white shadow-sm py-4 px-6 flex justify-end items-center border-b h-20">
         
+        {{-- Área do Usuário / Botão --}}
         <div>
             @if(auth('ouvinte')->check())
-            <div class="flex items-center gap-4">
-                {{-- Adicionei a imagem do avatar aqui para ficar mais legal --}}
-                @if(auth('ouvinte')->user()->avatar)
-                    <img src="{{ auth('ouvinte')->user()->avatar }}" class="w-8 h-8 rounded-full border border-gray-200">
-                @endif
-                
-                <span class="text-gray-700">Olá, <b>{{ auth('ouvinte')->user()->name }}</b></span>
-                
-                {{-- Botão de sair --}}
-                <button wire:click="logout" wire:loading.attr="disabled" class="text-sm text-red-500 hover:underline disabled:opacity-50 ml-2">
-                    Sair
-                </button>
-            </div>
+                {{-- USUÁRIO LOGADO --}}
+                <div class="flex items-center gap-4">
+                    <div class="flex flex-col text-right hidden sm:block">
+                        <span class="text-sm font-bold text-gray-800">{{ auth('ouvinte')->user()->name }}</span>
+                        <a href="{{ route('logout') }}" class="text-xs text-red-500 hover:text-red-700">Sair</a>
+                    </div>
+                    
+                    @if(auth('ouvinte')->user()->avatar)
+                        <img src="{{ auth('ouvinte')->user()->avatar }}" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-indigo-100">
+                    @else
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+                            {{ substr(auth('ouvinte')->user()->name, 0, 1) }}
+                        </div>
+                    @endif
+                    
+                    {{-- Botão Sair (Mobile) --}}
+                    <a href="{{ route('logout') }}" class="sm:hidden text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+                        </svg>
+                    </a>
+                </div>
             @else
-               {{-- Botão de Login --}}
-               <a href="{{ route('google-auth') }}" class="flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition">
-                   <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 19">
-                        <path fill-rule="evenodd" d="M8.842 18.083a8.8 8.8 0 0 1-8.65-8.948 8.841 8.841 0 0 1 8.8-8.652h.153a8.464 8.464 0 0 1 5.7 2.257l-2.193 2.038A5.27 5.27 0 0 0 9.09 3.4a5.882 5.882 0 0 0-.2 11.76h.124a5.091 5.091 0 0 0 5.248-4.057L14.3 11H9V8h8.34c.066.543.095 1.09.088 1.636-.086 5.053-3.463 8.449-8.4 8.449l-.186-.002Z" clip-rule="evenodd"/>
+               {{-- BOTÃO DE LOGIN --}}
+               <a href="{{ route('google-auth') }}" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition shadow-sm">
+                   <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
                    </svg>
-                   Login com Google
+                   Entrar com Google
                </a>
             @endif
         </div>
 
-        {{-- O modal continua igual aqui para baixo... --}}
-        <div x-show="showModal"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-            x-transition
-            x-cloak>
-             {{-- ... conteúdo do modal ... --}}
-             <div @click.away="showModal = false" class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 text-gray-800">
-                {{-- (Mantenha o resto do seu código do modal aqui) --}}
+        {{-- MODAL DE LOGIN MANUAL (MANTIDO) --}}
+        <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" x-transition x-cloak>
+            <div @click.away="showModal = false" class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 text-gray-800">
                 <div class="flex border-b mb-4">
-                    <button wire:click="$set('mode', 'login')"
-                        class="flex-1 py-2 font-bold {{ $mode == 'login' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500' }}">
-                        Login
-                    </button>
-                    <button wire:click="$set('mode', 'register')"
-                        class="flex-1 py-2 font-bold {{ $mode == 'register' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500' }}">
-                        Cadastro
-                    </button>
+                    <button wire:click="$set('mode', 'login')" class="flex-1 py-2 font-bold {{ $mode == 'login' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500' }}">Login</button>
+                    <button wire:click="$set('mode', 'register')" class="flex-1 py-2 font-bold {{ $mode == 'register' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500' }}">Cadastro</button>
                 </div>
 
                 @if($mode == 'login')
                 <form wire:submit.prevent="login" class="space-y-4">
-                    <div>
-                        <input type="email" wire:model="loginEmail" placeholder="E-mail"
-                            class="w-full border p-2 rounded @error('loginEmail') border-red-500 @enderror">
-                        @error('loginEmail') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <input type="password" wire:model="loginPassword" placeholder="Senha"
-                            class="w-full border p-2 rounded @error('loginPassword') border-red-500 @enderror">
-                        @error('loginPassword') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <button type="submit" wire:loading.attr="disabled" class="w-full bg-indigo-600 text-white py-2 rounded font-bold disabled:bg-gray-400">
-                        <span wire:loading.remove wire:target="login">Entrar</span>
-                        <span wire:loading wire:target="login">Autenticando...</span>
-                    </button>
+                    <input type="email" wire:model="loginEmail" placeholder="E-mail" class="w-full border p-2 rounded">
+                    <input type="password" wire:model="loginPassword" placeholder="Senha" class="w-full border p-2 rounded">
+                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded font-bold">Entrar</button>
                 </form>
                 @else
                 <form wire:submit.prevent="register" class="space-y-3">
-                    <div>
-                        <input type="text" wire:model="name" placeholder="Nome completo"
-                            class="w-full border p-2 rounded @error('name') border-red-500 @enderror">
-                        @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <input type="email" wire:model="email" placeholder="E-mail"
-                            class="w-full border p-2 rounded @error('email') border-red-500 @enderror">
-                        @error('email') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <input type="text" wire:model="telefone" placeholder="Telefone (opcional)"
-                            class="w-full border p-2 rounded">
-                    </div>
-
-                    <div>
-                        <input type="password" wire:model="password" placeholder="Crie uma senha"
-                            class="w-full border p-2 rounded @error('password') border-red-500 @enderror">
-                        @error('password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <button type="submit" wire:loading.attr="disabled" class="w-full bg-green-600 text-white py-2 rounded font-bold disabled:bg-gray-400">
-                        <span wire:loading.remove wire:target="register">Criar Conta</span>
-                        <span wire:loading wire:target="register">Processando...</span>
-                    </button>
+                    <input type="text" wire:model="name" placeholder="Nome" class="w-full border p-2 rounded">
+                    <input type="email" wire:model="email" placeholder="E-mail" class="w-full border p-2 rounded">
+                    <input type="password" wire:model="password" placeholder="Senha" class="w-full border p-2 rounded">
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 rounded font-bold">Cadastrar</button>
                 </form>
                 @endif
-
-                <button @click="showModal = false" class="mt-4 w-full text-center text-gray-400 text-sm hover:text-gray-600">
-                    Cancelar
-                </button>
+                <button @click="showModal = false" class="mt-4 w-full text-center text-sm text-gray-400">Cancelar</button>
             </div>
         </div>
     </nav>
