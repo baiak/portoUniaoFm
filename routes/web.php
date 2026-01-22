@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Livewire\ListaTodasNoticias;
 use App\Livewire\ExibirNoticia;
-use App\Livewire\ViewSpecial; 
+use App\Livewire\ViewSpecial;
+use App\Http\Controllers\Auth\GoogleAuthController; 
 
 Route::get('/', Home::class)->name('home');
 // Permite apenas 2 pedidos a cada 10 minutos por usuário logado
@@ -37,3 +38,7 @@ Route::get('/noticias', ListaTodasNoticias::class)->name('noticias.index');
 Route::get('/noticia/{slug}', ExibirNoticia::class)->name('noticia.show');
 
 Route::get('/especial/{slug}', ViewSpecial::class)->name('especial.ver');
+
+Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
+
+Route::get('auth/google/callback', [GoogleAuthController::class, 'callback']);
