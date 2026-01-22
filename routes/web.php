@@ -15,22 +15,7 @@ Route::get('/', Home::class)->name('home');
 // Permite apenas 2 pedidos a cada 10 minutos por usuário logado
 Route::post('/pedir-musica', [PedidoMusica::class, 'store'])
     ->middleware(['auth:ouvinte', 'throttle:2,10']);
-Route::get('/auth/google/callback', function () {
-    $googleUser = Socialite::driver('google')->user();
 
-    $ouvinte = Ouvinte::updateOrCreate([
-        'email' => $googleUser->email,
-    ], [
-        'name' => $googleUser->name,
-        'google_id' => $googleUser->id,
-        'avatar' => $googleUser->avatar,
-    ]);
-
-    // LOGA USANDO O GUARD 'OUVINTE'
-    Auth::guard('ouvinte')->login($ouvinte);
-
-    return redirect('/');
-});
 // Listagem de todas as notícias
 Route::get('/noticias', ListaTodasNoticias::class)->name('noticias.index');
 

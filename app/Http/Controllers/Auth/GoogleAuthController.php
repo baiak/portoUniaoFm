@@ -6,6 +6,7 @@ use App\Models\Ouvinte;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash; // Importante para o hash da senha
 
 class GoogleAuthController extends Controller
 {
@@ -19,27 +20,34 @@ class GoogleAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
             
-            // Cria ou Atualiza na tabela de OUVINTES
-            $ouvinte = Ouvinte::updateOrCreate([
-                'email' => $googleUser->email,
-            ], [
-                'name' => $googleUser->name,
-                'google_id' => $googleUser->id,
-                'avatar' => $googleUser->avatar,
-            ]);
+            // Verifica se o ouvinte já existe pelo e-mail
+            $ouvinte = Ouvinte::where('email', $googleUser->email)->first();
 
-            // Se for novo e não tiver senha, gera uma aleatória para não dar erro no banco
-            if (!$ouvinte->password) {
-                $ouvinte->password = bcrypt(Str::random(24));
-                $ouvinte->save();
+            if ($ouvinte) {
+                // Se existe, atualiza os dados do Google
+                $ouvinte->update([
+                    'name' => $googleUser->name,
+                    'google_id' => $googleUser->id,
+                    'avatar' => $googleUser->avatar,
+                ]);
+            } else {
+                // Se NÃO existe, cria com uma senha aleatória obrigatória
+                $ouvinte = Ouvinte::create([
+                    'name' => $googleUser->name,
+                    'email' => $googleUser->email,
+                    'google_id' => $googleUser->id,
+                    'avatar' => $googleUser->avatar,
+                    'password' => Hash::make(Str::random(24)), // Senha dummy para cumprir a regra do banco
+                ]);
             }
         
-            // LOGA NO GUARD 'OUVINTE'
+            // Realiza o login
             Auth::guard('ouvinte')->login($ouvinte);
         
             return redirect()->intended('/'); 
             
         } catch (\Exception $e) {
+            // Dica: Use dd($e->getMessage()) aqui temporariamente se o erro persistir para ver o motivo
             return redirect('/')->with('error', 'Erro no login: ' . $e->getMessage());
         }
     }
