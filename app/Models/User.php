@@ -11,7 +11,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Filament\Panel;
 
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, Notifiable;
@@ -58,6 +59,6 @@ class User extends Authenticatable
         // No futuro, você pode mudar para: return $this->is_admin;
         // Por enquanto, vamos permitir apenas o seu e-mail específico
         //return str_ends_with($this->email, '@gmail.com'); // Ou seu domínio
-        return true;
+        return $this->is_admin;
     }
 }
