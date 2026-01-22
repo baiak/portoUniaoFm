@@ -57,6 +57,7 @@ class User extends Authenticatable
     {
         // No futuro, você pode mudar para: return $this->is_admin;
         // Por enquanto, vamos permitir apenas o seu e-mail específico
-        return str_ends_with($this->email, '@gmail.com'); // Ou seu domínio
+        //return str_ends_with($this->email, '@gmail.com'); // Ou seu domínio
+        return $this->is_admin;
     }
 }
