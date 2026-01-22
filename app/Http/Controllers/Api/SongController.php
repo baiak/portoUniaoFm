@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SongHistory;
+use App\Models\RatedSong;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
