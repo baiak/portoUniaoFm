@@ -23,7 +23,7 @@ class BannerForm
                         ->visibility('public')
                         ->image()                     
                         ->imageEditor()
-                        ->optimize('webp', 80)               
+                        ->optimize()               
                         ->required(),
 
                     TextInput::make('titulo')
