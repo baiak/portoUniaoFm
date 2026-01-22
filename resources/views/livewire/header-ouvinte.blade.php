@@ -1,7 +1,7 @@
 <div x-data="{ showModal: @entangle('showModal') }"
     @abrir-login.window="showModal = true">
     <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center border-b">
-        <div style="display:none;">
+       <!-- <div style="display:none;">
             @if(auth('ouvinte')->check())
             <div class="flex items-center gap-4">
                 <span class="text-gray-700">Olá, <b>{{ auth('ouvinte')->user()->name }}</b></span>
@@ -14,7 +14,7 @@
                 Entrar / Cadastrar
             </button>
             @endif
-        </div>
+        </div>!-->
 
         <div x-show="showModal"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
