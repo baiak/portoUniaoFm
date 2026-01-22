@@ -23,7 +23,6 @@ class BannerForm
                         ->visibility('public')
                         ->image()                     
                         ->imageEditor()
-                        ->optimize()               
                         ->required(),
 
                     TextInput::make('titulo')
