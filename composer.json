@@ -13,7 +13,8 @@
         "laravel/socialite": "^5.24",
         "laravel/tinker": "^2.10.1",
         "spatie/eloquent-sortable": "^4.5",
-        "spatie/laravel-settings": "^3.6"
+        "spatie/laravel-settings": "^3.6",
+        "spatie/laravel-sitemap": "^7.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
