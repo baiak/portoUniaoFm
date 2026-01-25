@@ -10,6 +10,8 @@ use App\Livewire\ListaTodasNoticias;
 use App\Livewire\ExibirNoticia;
 use App\Livewire\ViewSpecial;
 use App\Http\Controllers\Auth\GoogleAuthController; 
+use App\Http\Controllers\PageController;
+use App\Livewire\ShowPage;
 
 Route::get('/', Home::class)->name('home');
 // Permite apenas 2 pedidos a cada 10 minutos por usuário logado
@@ -34,3 +36,4 @@ Route::get('/logout', function () {
     request()->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
+Route::get('/{slug}', ShowPage::class)->name('pages.show');
