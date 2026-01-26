@@ -111,7 +111,23 @@
             </div>
         </div>
     </footer>
-    <livewire:cookie-consent />    
+    <livewire:cookie-consent />
+    <script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.hook('request', ({ fail }) => {
+            fail(({ status, preventDefault }) => {
+                // Se o erro for 419 (Sessão Expirada)
+                if (status === 419) {
+                    // Impede o Livewire de mostrar o modal/alert padrão
+                    preventDefault()
+                    
+                    // Opcional: Se quiser recarregar a página silenciosamente
+                  //  window.location.reload()
+                }
+            })
+        })
+    })
+   </script>    
     @livewireScripts
 </body>
 </html>

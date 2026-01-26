@@ -11,36 +11,34 @@ use Illuminate\Support\Str;
 
 class MusicMonitor extends Component
 {
-    public function registerVote($voteType)
+    /**
+     * Registra o voto. Se $songId for nulo, assume a música atual.
+     */
+    public function registerVote($voteType, $songId = null)
     {
-        // 1. Gerenciamento do Cookie (Identidade do Usuário)
         $visitorId = Cookie::get('radio_visitor_id');
         
-        // Se não tiver cookie, cria um UUID novo e enfileira para salvar
         if (!$visitorId) {
             $visitorId = (string) Str::uuid();
-            Cookie::queue('radio_visitor_id', $visitorId, 525600); // 1 ano de validade
+            Cookie::queue('radio_visitor_id', $visitorId, 525600);
         }
 
-        // 2. Pega a música tocando AGORA
-        $nowPlaying = SongHistory::where('type', 'song')->latest('played_at')->first();
+        // Busca a música específica ou a última que tocou
+        $targetSong = $songId 
+            ? SongHistory::find($songId) 
+            : SongHistory::where('type', 'song')->latest('played_at')->first();
 
-        if (!$nowPlaying) return;
+        if (!$targetSong) return;
 
-        // 3. Garante que ela existe na tabela de votos
         $ratedSong = RatedSong::firstOrCreate(
-            ['artist' => $nowPlaying->artist, 'title' => $nowPlaying->title],
-            ['cover_url' => $nowPlaying->cover_url]
+            ['artist' => $targetSong->artist, 'title' => $targetSong->title],
+            ['cover_url' => $targetSong->cover_url]
         );
 
-        // 4. Verifica se ESSE visitante já votou NESSA música
         $existingVote = SongVote::where('rated_song_id', $ratedSong->id)
                                 ->where('visitor_id', $visitorId)
                                 ->first();
 
-        // --- LOGICA DE VOTO ---
-
-        // A) Primeiro voto
         if (!$existingVote) {
             SongVote::create([
                 'rated_song_id' => $ratedSong->id,
@@ -48,60 +46,50 @@ class MusicMonitor extends Component
                 'vote_type' => $voteType
             ]);
             
-            if ($voteType == 'like') $ratedSong->increment('likes');
-            else $ratedSong->increment('dislikes');
+            $voteType == 'like' ? $ratedSong->increment('likes') : $ratedSong->increment('dislikes');
         } 
-        
-        // B) Troca de voto (Era Like -> Virou Dislike ou vice-versa)
         elseif ($existingVote->vote_type !== $voteType) {
-            
-            // Remove o antigo
-            if ($existingVote->vote_type == 'like') $ratedSong->decrement('likes');
-            else $ratedSong->decrement('dislikes');
-
-            // Adiciona o novo
-            if ($voteType == 'like') $ratedSong->increment('likes');
-            else $ratedSong->increment('dislikes');
-
-            // Atualiza o comprovante
+            // Troca de voto
+            $existingVote->vote_type == 'like' ? $ratedSong->decrement('likes') : $ratedSong->decrement('dislikes');
+            $voteType == 'like' ? $ratedSong->increment('likes') : $ratedSong->increment('dislikes');
             $existingVote->update(['vote_type' => $voteType]);
         }
-        
-        // C) Clicou no mesmo botão? Faz nada.
     }
 
     public function render()
     {
-        // 1. Buscamos mais registros (ex: 30) para ter margem caso haja muitos duplicados
-        $rawTracks = SongHistory::where('type', 'song')->orderBy('played_at', 'desc')->take(6)->get();
-
-        // 2. Filtramos para manter apenas musicas únicas (baseado no titulo)
-        // O unique mantém o primeiro registro encontrado (o mais recente) e descarta os outros
-        $uniqueTracks = $rawTracks->unique('title');
-        $nowPlaying = $uniqueTracks->first();
-        $history = $uniqueTracks->skip(1)->take(10);
-
-        // Verifica estado do botão para o usuário atual
         $visitorId = Cookie::get('radio_visitor_id');
-        $userVote = null;
 
-        if ($nowPlaying && $visitorId) {
-            $ratedSong = RatedSong::where('artist', $nowPlaying->artist)
-                                  ->where('title', $nowPlaying->title)
+        // Buscamos as últimas músicas para montar a lista
+        $rawTracks = SongHistory::where('type', 'song')
+            ->orderBy('played_at', 'desc')
+            ->take(15)
+            ->get();
+
+        // Filtramos por combinação única de Artista + Título
+        $uniqueTracks = $rawTracks->unique(fn($item) => $item->artist . $item->title);
+
+        // Mapeamos cada música para verificar se o usuário já votou nela
+        $tracksWithVotes = $uniqueTracks->map(function ($track) use ($visitorId) {
+            $userVote = null;
+            if ($visitorId) {
+                $rated = RatedSong::where('artist', $track->artist)
+                                  ->where('title', $track->title)
                                   ->first();
-
-            if ($ratedSong) {
-                $vote = SongVote::where('rated_song_id', $ratedSong->id)
-                                ->where('visitor_id', $visitorId)
-                                ->first();
-                if ($vote) $userVote = $vote->vote_type;
+                if ($rated) {
+                    $vote = SongVote::where('rated_song_id', $rated->id)
+                                    ->where('visitor_id', $visitorId)
+                                    ->first();
+                    $userVote = $vote ? $vote->vote_type : null;
+                }
             }
-        }
+            $track->user_vote = $userVote; // Atribui o status do voto ao objeto da música
+            return $track;
+        });
 
         return view('livewire.music-monitor', [
-            'nowPlaying' => $nowPlaying,
-            'history' => $history,
-            'userVote' => $userVote
+            'nowPlaying' => $tracksWithVotes->first(),
+            'history' => $tracksWithVotes->skip(1)->take(5)
         ]);
     }
 }
