@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-adsense-account" content="ca-pub-6803402036116581">
     <title>{{ $title ?? 'Porto União FM' }}</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J3E4TXJ7N0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-J3E4TXJ7N0');
+</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @livewireStyles

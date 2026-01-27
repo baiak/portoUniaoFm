@@ -10,5 +10,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Quando alguém mandar um POST para /api/update-song...
     // ... chame o método 'store' do SongController
     Route::post('/update-song', [SongController::class, 'store']);
+    Route::get('/current-song', [SongController::class, 'current']);
     
 });
