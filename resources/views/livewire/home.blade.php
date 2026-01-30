@@ -33,10 +33,10 @@
 
                     @if($banner->link_url)
                     <a href="{{$banner->link_url}}">
-                        <img src="{{ $banner->url }}" alt="{{ $banner->titulo }}" class="w-full h-full object-cover">
+                        <img src="{{ $banner->url }}" alt="{{ $banner->titulo }}" wire:navigate class="w-full h-full object-cover">
                     </a>
                     @else
-                    <img src="{{ $banner->url }}" alt="{{ $banner->titulo }}" class="w-full h-full object-cover">
+                    <img src="{{ $banner->url }}" alt="{{ $banner->titulo }}" wire:navigate class="w-full h-full object-cover">
                     @endif
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-5 sm:p-10 md:p-16 pointer-events-none">
@@ -44,7 +44,7 @@
                             @if($banner->titulo)
                             @if($banner->link_url)
                             <h2 class="text-white text-xl sm:text-3xl md:text-5xl font-bold leading-tight mb-2 md:mb-4">
-                                <a href="{{ $banner->link_url }}" class="hover:underline">{{ $banner->titulo }}</a>
+                                <a href="{{ $banner->link_url }}" wire:navigate class="hover:underline">{{ $banner->titulo }}</a>
                             </h2>
                             @else
                             <h2 class="text-white text-xl sm:text-3xl md:text-5xl font-bold leading-tight mb-2 md:mb-4">
@@ -60,7 +60,7 @@
                             @endif
 
                             @if($banner->link_url)
-                            <a href="{{ $banner->link_url }}" class="inline-block bg-gray-100 hover:bg-gray-300 text-gray-800 text-xs sm:text-sm md:text-base font-semibold px-2 py-1 md:px-6 md:py-3 rounded-lg transition-colors">
+                            <a href="{{ $banner->link_url }}" wire:navigate class="inline-block bg-gray-100 hover:bg-gray-300 text-gray-800 text-xs sm:text-sm md:text-base font-semibold px-2 py-1 md:px-6 md:py-3 rounded-lg transition-colors">
                                 Saiba Mais
                             </a>
                             @endif

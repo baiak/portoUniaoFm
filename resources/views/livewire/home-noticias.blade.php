@@ -8,7 +8,7 @@
                     </h2>
                     <p class="text-gray-500 mt-2">Últimas notícias</p>
                 </div>
-                <a href="/noticias" class="hidden md:block text-indigo-600 font-bold hover:underline">
+                <a href="/noticias" class="hidden md:block text-indigo-600 font-bold hover:underline" wire:navigate>
                     Ver todas as notícias →
                 </a>
             </div>
@@ -41,16 +41,18 @@
                     </div>
 
                     <div class="p-6 flex-1 flex flex-col">
-                        <h3 class="text-xl font-bold text-gray-900 leading-tight mb-3">
-                            {{ $noticia->titulo }}
-                        </h3>
+                        <a href="{{ route('noticia.show', $noticia->slug) }}" wire:navigate>
+                             <h3 class="text-xl font-bold text-gray-900 leading-tight mb-3">
+                                 {{ $noticia->titulo }}
+                             </h3>
+                        </a>
 
                         <div class="text-gray-600 text-sm line-clamp-3 mb-4">
                             {!! Str::limit(strip_tags($noticia->conteudo), 120) !!}
                         </div>
 
                         <div class="mt-auto">
-                            <a href="{{ route('noticia.show', $noticia->slug) }}"
+                            <a href="{{ route('noticia.show', $noticia->slug) }}" wire:navigate
                                 class="inline-flex items-center text-indigo-600 font-bold text-sm hover:gap-2 transition-all">
                                 Ler notícia completa
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

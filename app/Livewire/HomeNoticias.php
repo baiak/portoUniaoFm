@@ -12,7 +12,7 @@ class HomeNoticias extends Component
         // Buscamos as últimas 3 ou 6 notícias para não poluir a home
         $noticias = Noticia::where('is_published', true)
             ->orderBy('publicado_em', 'desc')
-            ->limit(3) 
+            ->limit(value: 6) 
             ->get();
 
         return view('livewire.home-noticias', [

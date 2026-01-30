@@ -13,9 +13,13 @@ class ExibirNoticia extends Component
     {
         $this->noticia = Noticia::where('slug', $slug)->firstOrFail();
     }
+    public function title(): string
+    {
+        return $this->noticia->titulo . ' | Clube 87 - Porto União FM 87.9';
+    }
 
     public function render()
     {
-        return view('livewire.exibir-noticia');
+        return view('livewire.exibir-noticia')->title($this->title());
     }
 }

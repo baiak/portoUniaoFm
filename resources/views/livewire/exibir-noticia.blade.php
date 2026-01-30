@@ -2,7 +2,7 @@
     <div class="bg-white min-h-screen">
         <article class="max-w-3xl mx-auto px-4 py-16">
             <nav class="mb-8">
-                <a href="{{ route('noticias.index') }}" class="text-indigo-600 font-bold flex items-center gap-2 hover:underline">
+                <a href="https://www.clube87.com" wire:navigate class="text-indigo-600 font-bold flex items-center gap-2 hover:underline">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path d="M15 19l-7-7 7-7"></path>
                     </svg>

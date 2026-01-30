@@ -8,7 +8,7 @@
                 {{-- Texto Simples --}}
                 <div class="text-center md:text-left text-sm md:text-base">
                     <span class="font-bold">Aviso de Cookies:</span> 
-                    Utilizamos cookies para oferecer a melhor experiência. Ao continuar, você concorda com nossa <a href="https://www.clube87.com/politica-de-privacidade" class="text-blue-400 hover:underline" target="_blank">política de privacidade</a>.
+                    Utilizamos cookies para oferecer a melhor experiência. Ao continuar, você concorda com nossa <a href="https://www.clube87.com/politica-de-privacidade" wire:navigate class="text-blue-400 hover:underline" target="_blank">política de privacidade</a>.
                 </div>
 
                 {{-- Botão Simples e Visível --}}

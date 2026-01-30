@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\PageController;
 use App\Livewire\ShowPage;
 use App\Livewire\HistoricoMusicas;
+use App\Livewire\ContatoForm;
 
 
 Route::get('/', Home::class)->name('home');
@@ -38,7 +39,16 @@ Route::get('/logout', function () {
     request()->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
+
 Route::get('/{slug}', ShowPage::class)->name('pages.show');
 
-
 Route::get('/programacao/historico', HistoricoMusicas::class)->name('musicas.historico');
+
+Route::get('/action/contact', ContatoForm::class)->name('contact');
+
+Route::get('/action/contato', function () {
+      return view('paginas.contato');
+   //return app(ContatoForm::class)->render();
+})->name('contato');
+
+

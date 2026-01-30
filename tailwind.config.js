@@ -5,6 +5,7 @@ export default {
     "./resources/**/*.js",
     "./resources/**/*.vue",
     "./app/Filament/**/*.php", // Importante para o painel não quebrar
+    "./app/Livewire/**/*.php",
   ],
   theme: {
     extend: {},
