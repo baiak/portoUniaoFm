@@ -5,29 +5,23 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\PedidoMusica;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
 class PedidoMusicaForm extends Component
 {
     public $nome, $telefone, $musica, $mensagem;
-    
-    // Variáveis do Captcha
-    public $captcha_resposta_usuario;
-    public $num1;
-    public $num2;
+    public $captcha_token; // Token enviado pelo Google
 
     protected $rules = [
         'nome' => 'required|min:3',
         'musica' => 'required',
-        'telefone' => 'nullable', // Telefone opcional para convidados se quiser
+        'telefone' => 'nullable',
         'mensagem' => 'nullable|string|max:255',
     ];
 
     public function mount()
     {
-        // Gera o desafio matemático ao carregar
-        $this->gerarCaptcha();
-
         if (auth('ouvinte')->check()) {
             $ouvinte = auth('ouvinte')->user();
             $this->nome = $ouvinte->name;
@@ -35,52 +29,55 @@ class PedidoMusicaForm extends Component
         }
     }
 
-    public function gerarCaptcha()
-    {
-        $this->num1 = rand(1, 10);
-        $this->num2 = rand(1, 9);
-        $this->captcha_resposta_usuario = '';
-    }
-
     public function save(Request $request)
     {
-        // 1. Verificação de Limite de Tempo (Rate Limiter)
-        // Usa o IP para bloquear spam, chave única por IP
+        // 1. Rate Limiter (Proteção básica por IP)
         $key = 'pedido-musica:' . $request->ip();
-
-        // Permite 1 pedido a cada 3 minutos (180 segundos)
         if (RateLimiter::tooManyAttempts($key, 1)) {
             $seconds = RateLimiter::availableIn($key);
-            $this->addError('rate_limit', "Muitos pedidos! Aguarde $seconds segundos.");
+            $this->addError('rate_limit', "Aguarde $seconds segundos para pedir outra.");
             return;
         }
 
         $this->validate();
 
-        // 2. Validação do Captcha (Apenas se NÃO estiver logado)
+        // 2. Verificação do reCAPTCHA (Apenas para deslogados)
         if (!auth('ouvinte')->check()) {
-            if ((int)$this->captcha_resposta_usuario !== ($this->num1 + $this->num2)) {
-                $this->addError('captcha_erro', 'Conta incorreta! Tente novamente.');
-                $this->gerarCaptcha(); // Gera um novo para evitar força bruta
+            if (!$this->captcha_token) {
+                $this->addError('captcha_erro', 'Marque o campo "Não sou um robô".');
+                return;
+            }
+
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => config('services.recaptcha.secret'),
+                'response' => $this->captcha_token,
+                'remoteip' => $request->ip(),
+            ]);
+
+            if (!$response->json('success')) {
+                $this->addError('captcha_erro', 'Falha na verificação. Tente novamente.');
+                $this->dispatch('resetCaptcha');
                 return;
             }
         }
 
-        // 3. Salvar no Banco
+        // 3. Salvar Pedido
         PedidoMusica::create([
-            'user_id' => auth('ouvinte')->id() ?? null, // Salva NULL se for convidado
+            'user_id' => auth('ouvinte')->id() ?? null,
             'nome' => $this->nome,
             'telefone' => $this->telefone,
             'musica' => $this->musica,
             'mensagem' => $this->mensagem,
         ]);
 
-        // Ativa o bloqueio de tempo por 180 segundos
         RateLimiter::hit($key, 180);
 
-        // Limpa campos e gera novo captcha
-        $this->reset(['musica', 'captcha_resposta_usuario']);
-        $this->gerarCaptcha();
+        // Resetar campos (exceto nome/telefone se for logado)
+        $this->reset(['musica', 'mensagem', 'captcha_token']);
+        
+        if (!auth('ouvinte')->check()) {
+            $this->dispatch('resetCaptcha');
+        }
         
         session()->flash('success', 'Pedido enviado com sucesso!');
     }

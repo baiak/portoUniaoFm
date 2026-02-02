@@ -46,9 +46,4 @@ Route::get('/programacao/historico', HistoricoMusicas::class)->name('musicas.his
 
 Route::get('/action/contact', ContatoForm::class)->name('contact');
 
-Route::get('/action/contato', function () {
-      return view('paginas.contato');
-   //return app(ContatoForm::class)->render();
-})->name('contato');
-
 
