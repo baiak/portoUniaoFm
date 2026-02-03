@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PedidoMusica extends Model
 {
     protected $fillable = [
+        'nome',
         'user_id',
         'telefone',
         'musica',

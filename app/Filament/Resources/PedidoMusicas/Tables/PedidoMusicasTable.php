@@ -17,7 +17,7 @@ class PedidoMusicasTable
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('ouvinte.name')->label('Ouvinte'),
+                Tables\Columns\TextColumn::make('nome')->label('Nome'),
                 Tables\Columns\TextColumn::make('musica')->label('Música')->placeholder('Só recado'),
                 Tables\Columns\TextColumn::make('mensagem')->limit(50),
                 Tables\Columns\ToggleColumn::make('lido')->label('Atendido'),
