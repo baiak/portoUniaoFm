@@ -89,7 +89,7 @@
         </nav>
     </div>
 
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-1">
         {{ $slot }}
     </main>
 
@@ -122,8 +122,8 @@
                 {{-- Coluna 3: Contato / Social --}}
                 <div>
                     <h3 class="text-white text-lg font-bold mb-4">Contato</h3>
-                    <p class="text-sm mb-2">📍 Rua Principal, 123 - Centro</p>
-                    <p class="text-sm">📞 (00) 1234-5678</p>
+                    <p class="text-sm mb-2">📍 Rua L. Ossak, 210 - S. Joaquim</p>
+                   
                 </div>
             </div>
 
