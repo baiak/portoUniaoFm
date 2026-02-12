@@ -1,59 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Porto União FM - Sistema de Web Rádio
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este é um sistema completo de gerenciamento e portal para web rádio, desenvolvido com o framework Laravel e o ecossistema TALL Stack. O projeto inclui um painel administrativo robusto para gestão de conteúdo e um script de monitoramento inteligente para reconhecimento de músicas em tempo real.
 
-## About Laravel
+## 🚀 Tecnologias Utilizadas
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O projeto foi construído utilizando as seguintes tecnologias:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* **Framework PHP:** [Laravel 11](https://laravel.com/)
+* **Painel Administrativo:** [Filament v3](https://filamentphp.com/) (Gestão de banners, notícias, anunciantes e configurações)
+* **Frontend Reativo:** [Livewire](https://livewire.laravel.com/) e [Alpine.js](https://alpinejs.dev/)
+* **Estilização:** [Tailwind CSS](https://tailwindcss.com/)
+* **Banco de Dados:** MariaDB / MySQL
+* **Monitoramento de Áudio:** Python com bibliotecas de reconhecimento de música (ShazamIO).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Funcionalidades Principais
 
-## Learning Laravel
+* **Player de Rádio:** Interface intuitiva para ouvir a rádio online em tempo real.
+* **Reconhecimento de Músicas (Monitor):** Um script Python integrado que monitora o stream de áudio e identifica a música que está tocando, atualizando o histórico no site automaticamente.
+* **Gestão de Conteúdo:**
+    * **Notícias:** Sistema completo de publicação com categorias.
+    * **Banners e Anunciantes:** Gerenciamento de espaços publicitários.
+    * **Páginas Customizadas:** Criação dinâmicas de páginas institucionais.
+* **Interatividade com o Ouvinte:**
+    * **Pedidos de Música:** Formulário para ouvintes solicitarem suas canções favoritas.
+    * **Sistema de Votação:** Rankeamento das músicas mais populares (Top Songs).
+    * **Área do Ouvinte:** Cadastro e autenticação social (Google Auth).
+* **SEO e Utilidades:** Geração automática de Sitemap e comando de limpeza de logs.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🛠️ Estrutura do Projeto
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* `/app/Filament`: Recursos e esquemas do painel administrativo.
+* `/app/Livewire`: Componentes dinâmicos da interface do usuário.
+* `/app/Models`: Modelagem dos dados (Programas, Notícias, Ouvintes, Pedidos, etc).
+* `/monitor-radio`: Script Python independente para monitoramento do stream de áudio.
 
-## Laravel Sponsors
+## 🔧 Instalação e Configuração
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Pré-requisitos
+* PHP 8.2 ou superior
+* Composer
+* Node.js & NPM
+* Python 3.11+ (para o monitor)
 
-### Premium Partners
+### Passo a passo
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/seu-usuario/portouniaofm.git](https://github.com/seu-usuario/portouniaofm.git)
+    cd portouniaofm
+    ```
 
-## Contributing
+2.  **Instale as dependências do PHP:**
+    ```bash
+    composer install
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3.  **Instale as dependências do Frontend:**
+    ```bash
+    npm install
+    npm run build
+    ```
 
-## Code of Conduct
+4.  **Configure o ambiente:**
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+    *Configure as credenciais do banco de dados no arquivo `.env`.*
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5.  **Execute as migrações e seeders:**
+    ```bash
+    php artisan migrate --seed
+    ```
 
-## Security Vulnerabilities
+6.  **Configuração do Monitor (Python):**
+    ```bash
+    cd monitor-radio
+    python -m venv venv
+    source venv/bin/activate  # ou venv\Scripts\activate no Windows
+    pip install -r requirements.txt
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📈 Comandos Úteis
 
-## License
+* **Gerar Sitemap:** `php artisan sitemap:generate`
+* **Limpar Logs Antigos:** `php artisan logs:clean` (agendado via cron)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📄 Licença
+
+Este projeto está sob a licença [MIT](LICENSE).
