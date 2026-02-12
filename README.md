@@ -46,7 +46,7 @@ O projeto foi construído utilizando as seguintes tecnologias:
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/seu-usuario/portouniaofm.git](https://github.com/seu-usuario/portouniaofm.git)
+    git clone [https://github.com/baiak/portouniaofm.git](https://github.com/baiaj/portouniaofm.git)
     cd portouniaofm
     ```
 
