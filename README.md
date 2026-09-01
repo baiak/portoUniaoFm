@@ -88,4 +88,6 @@ O projeto foi construído utilizando as seguintes tecnologias:
 
 ## 📄 Licença
 
-Este projeto está sob a licença [MIT](LICENSE).
+Link para o site: www.clube87.com
+
+
